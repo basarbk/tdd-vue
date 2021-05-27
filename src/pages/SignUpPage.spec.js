@@ -1,6 +1,7 @@
 import SignUpPage from "./SignUpPage.vue";
 import { render, screen } from "@testing-library/vue";
 import "@testing-library/jest-dom";
+import userEvent from "@testing-library/user-event";
 
 describe("Sign Up Page", () => {
   describe("Layout", () => {
@@ -48,6 +49,17 @@ describe("Sign Up Page", () => {
       render(SignUpPage);
       const button = screen.queryByRole("button", { name: "Sign Up" });
       expect(button).toBeDisabled();
+    });
+  });
+  describe("Interactions", () => {
+    it("enables the button when the password and password repeat fileds have same value", async () => {
+      render(SignUpPage);
+      const passwordInput = screen.queryByLabelText("Password");
+      const passwordRepeatInput = screen.queryByLabelText("Password Repeat");
+      await userEvent.type(passwordInput, "P4ssword");
+      await userEvent.type(passwordRepeatInput, "P4ssword");
+      const button = screen.queryByRole("button", { name: "Sign Up" });
+      expect(button).toBeEnabled();
     });
   });
 });
