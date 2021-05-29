@@ -37,7 +37,7 @@
         <div class="text-center">
           <button
             class="btn btn-primary"
-            :disabled="isDisabled || disabled"
+            :disabled="isDisabled || apiProgress"
             @click.prevent="submit"
           >
             <span
@@ -61,7 +61,6 @@ export default {
   name: "SignUpPage",
   data() {
     return {
-      disabled: false,
       username: "",
       email: "",
       password: "",
@@ -73,7 +72,6 @@ export default {
   },
   methods: {
     submit() {
-      this.disabled = true;
       this.apiProgress = true;
       axios
         .post("/api/1.0/users", {
@@ -88,6 +86,7 @@ export default {
           if (error.response.status === 400) {
             this.errors = error.response.data.validationErrors;
           }
+          this.apiProgress = false;
         });
     },
   },
