@@ -101,5 +101,16 @@ export default {
       return this.password !== this.passwordRepeat;
     },
   },
+  watch: {
+    username() {
+      delete this.errors.username;
+    },
+    email() {
+      delete this.errors.email;
+    },
+    password() {
+      delete this.errors.password;
+    },
+  },
 };
 </script>
