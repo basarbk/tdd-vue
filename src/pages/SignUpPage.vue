@@ -11,19 +11,19 @@
           :help="errors.username"
           v-model="username"
         />
-        <div class="mb-3">
-          <label for="e-mail" class="form-label">E-mail</label>
-          <input id="e-mail" v-model="email" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input
-            id="password"
-            type="password"
-            v-model="password"
-            class="form-control"
-          />
-        </div>
+        <Input
+          id="e-mail"
+          label="E-mail"
+          :help="errors.email"
+          v-model="email"
+        />
+        <Input
+          id="password"
+          label="Password"
+          :help="errors.password"
+          v-model="password"
+          type="password"
+        />
         <div class="mb-3">
           <label for="password-repeat" class="form-label"
             >Password Repeat</label

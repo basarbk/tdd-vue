@@ -7,6 +7,7 @@
       :class="{ 'is-invalid': help }"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
+      :type="type"
     />
     <span class="invalid-feedback">{{ help }}</span>
   </div>
@@ -19,6 +20,7 @@ export default {
     id: String,
     help: String,
     modelValue: String,
+    type: String,
   },
 };
 </script>
