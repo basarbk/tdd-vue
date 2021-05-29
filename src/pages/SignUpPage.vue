@@ -5,11 +5,12 @@
         <h1 class="text-center">Sign Up</h1>
       </div>
       <div class="card-body">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input id="username" v-model="username" class="form-control" />
-          <span>{{ errors.username }}</span>
-        </div>
+        <Input
+          id="username"
+          label="Username"
+          :help="errors.username"
+          v-model="username"
+        />
         <div class="mb-3">
           <label for="e-mail" class="form-label">E-mail</label>
           <input id="e-mail" v-model="email" class="form-control" />
@@ -57,8 +58,12 @@
 </template>
 <script>
 import axios from "axios";
+import Input from "../components/Input";
 export default {
   name: "SignUpPage",
+  components: {
+    Input,
+  },
   data() {
     return {
       username: "",
