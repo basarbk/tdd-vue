@@ -51,6 +51,16 @@
       Please check your e-mail to activate your account
     </div>
   </div>
+  <img
+    src="https://www.countryflags.io/tr/flat/24.png"
+    title="Türkçe"
+    @click="$i18n.locale = 'tr'"
+  />
+  <img
+    src="https://www.countryflags.io/gb/flat/24.png"
+    title="English"
+    @click="$i18n.locale = 'en'"
+  />
 </template>
 <script>
 import axios from "axios";
@@ -114,3 +124,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+img {
+  cursor: pointer;
+}
+</style>

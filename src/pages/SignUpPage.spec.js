@@ -5,6 +5,8 @@ import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import i18n from "../locales/i18n";
+import en from "../locales/en.json";
+import tr from "../locales/tr.json";
 
 describe("Sign Up Page", () => {
   describe("Layout", () => {
@@ -262,5 +264,64 @@ describe("Sign Up Page", () => {
         expect(text).not.toBeInTheDocument();
       }
     );
+  });
+  describe("Internationalization", () => {
+    const setup = () => {
+      render(SignUpPage, {
+        global: {
+          plugins: [i18n],
+        },
+      });
+    };
+    it("initially displays all text in English", async () => {
+      setup();
+      expect(
+        screen.queryByRole("heading", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.username)).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.email)).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.password)).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
+    it("displays all text in Turkish after selecting that language", async () => {
+      setup();
+
+      const turkish = screen.queryByTitle("Türkçe");
+      await userEvent.click(turkish);
+
+      expect(
+        screen.queryByRole("heading", { name: tr.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: tr.signUp })
+      ).toBeInTheDocument();
+      expect(screen.queryByLabelText(tr.username)).toBeInTheDocument();
+      expect(screen.queryByLabelText(tr.email)).toBeInTheDocument();
+      expect(screen.queryByLabelText(tr.password)).toBeInTheDocument();
+      expect(screen.queryByLabelText(tr.passwordRepeat)).toBeInTheDocument();
+    });
+    it("displays all text in English after page is translated to Turkish", async () => {
+      setup();
+
+      const turkish = screen.queryByTitle("Türkçe");
+      await userEvent.click(turkish);
+
+      const english = screen.queryByTitle("English");
+      await userEvent.click(english);
+
+      expect(
+        screen.queryByRole("heading", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.username)).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.email)).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.password)).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
   });
 });
