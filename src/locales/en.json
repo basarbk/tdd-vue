@@ -4,5 +4,6 @@
   "email": "E-mail",
   "password": "Password",
   "passwordRepeat": "Password Repeat",
-  "passwordMismatchValidation": "Password mismatch"
+  "passwordMismatchValidation": "Password mismatch",
+  "accountActivationNotification": "Please check your e-mail to activate your account"
 }

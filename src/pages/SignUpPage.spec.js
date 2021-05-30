@@ -9,6 +9,27 @@ import en from "../locales/en.json";
 import tr from "../locales/tr.json";
 import LanguageSelector from "../components/LanguageSelector.vue";
 
+let requestBody;
+let counter = 0;
+let acceptLanguageHeader;
+const server = setupServer(
+  rest.post("/api/1.0/users", (req, res, ctx) => {
+    requestBody = req.body;
+    counter += 1;
+    acceptLanguageHeader = req.headers.get("Accept-Language");
+    return res(ctx.status(200));
+  })
+);
+
+beforeAll(() => server.listen());
+
+beforeEach(() => {
+  counter = 0;
+  server.resetHandlers();
+});
+
+afterAll(() => server.close());
+
 describe("Sign Up Page", () => {
   describe("Layout", () => {
     const setup = () => {
@@ -65,25 +86,6 @@ describe("Sign Up Page", () => {
     });
   });
   describe("Interactions", () => {
-    let requestBody;
-    let counter = 0;
-    const server = setupServer(
-      rest.post("/api/1.0/users", (req, res, ctx) => {
-        requestBody = req.body;
-        counter += 1;
-        return res(ctx.status(200));
-      })
-    );
-
-    beforeAll(() => server.listen());
-
-    beforeEach(() => {
-      counter = 0;
-      server.resetHandlers();
-    });
-
-    afterAll(() => server.close());
-
     let button, passwordInput, passwordRepeatInput, usernameInput;
     const setup = async () => {
       render(SignUpPage, {
@@ -267,7 +269,13 @@ describe("Sign Up Page", () => {
     );
   });
   describe("Internationalization", () => {
-    let turkishLanguage, englishLanguage, password, passwordRepeat;
+    let turkishLanguage,
+      englishLanguage,
+      username,
+      email,
+      password,
+      passwordRepeat,
+      button;
     const setup = () => {
       const app = {
         components: {
@@ -287,8 +295,11 @@ describe("Sign Up Page", () => {
       });
       turkishLanguage = screen.queryByTitle("Türkçe");
       englishLanguage = screen.queryByTitle("English");
+      username = screen.queryByLabelText(en.username);
+      email = screen.queryByLabelText(en.email);
       password = screen.queryByLabelText(en.password);
       passwordRepeat = screen.queryByLabelText(en.passwordRepeat);
+      button = screen.queryByRole("button", { name: en.signUp });
     };
 
     afterEach(() => {
@@ -349,6 +360,42 @@ describe("Sign Up Page", () => {
       await userEvent.type(passwordRepeat, "N3wP4ss");
       const validation = screen.queryByText(tr.passwordMismatchValidation);
       expect(validation).toBeInTheDocument();
+    });
+    it("sends accept-language having en to backend for sign up request", async () => {
+      setup();
+      await userEvent.type(username, "user1");
+      await userEvent.type(email, "user1@mail.com");
+      await userEvent.type(password, "P4ssword");
+      await userEvent.type(passwordRepeat, "P4ssword");
+      await userEvent.click(button);
+      await screen.findByText(
+        "Please check your e-mail to activate your account"
+      );
+      expect(acceptLanguageHeader).toBe("en");
+    });
+    it("sends accept-language having tr after that language is selected", async () => {
+      setup();
+      await userEvent.click(turkishLanguage);
+      await userEvent.type(username, "user1");
+      await userEvent.type(email, "user1@mail.com");
+      await userEvent.type(password, "P4ssword");
+      await userEvent.type(passwordRepeat, "P4ssword");
+      await userEvent.click(button);
+      await screen.findByText(tr.accountActivationNotification);
+      expect(acceptLanguageHeader).toBe("tr");
+    });
+    it("displays account activation information in Turkish after selecting that language", async () => {
+      setup();
+      await userEvent.click(turkishLanguage);
+      await userEvent.type(username, "user1");
+      await userEvent.type(email, "user1@mail.com");
+      await userEvent.type(password, "P4ssword");
+      await userEvent.type(passwordRepeat, "P4ssword");
+      await userEvent.click(button);
+      const accountActivation = await screen.findByText(
+        tr.accountActivationNotification
+      );
+      expect(accountActivation).toBeInTheDocument();
     });
   });
 });

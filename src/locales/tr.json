@@ -4,5 +4,6 @@
   "email": "E-posta",
   "password": "Şifre",
   "passwordRepeat": "Şifre Tekrarı",
-  "passwordMismatchValidation": "Şifreniz eşleşmiyor"
+  "passwordMismatchValidation": "Şifreniz eşleşmiyor",
+  "accountActivationNotification": "Hesabınızı aktifleştirmek için e-postanızı kontrol edin"
 }
