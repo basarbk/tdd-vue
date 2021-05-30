@@ -29,7 +29,7 @@
           :label="$t('passwordRepeat')"
           type="password"
           v-model="passwordRepeat"
-          :help="hasPasswordMismatch ? 'Password mismatch' : ''"
+          :help="hasPasswordMismatch ? $t('passwordMismatchValidation') : ''"
         />
         <div class="text-center">
           <button

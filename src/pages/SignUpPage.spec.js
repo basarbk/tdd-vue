@@ -267,7 +267,7 @@ describe("Sign Up Page", () => {
     );
   });
   describe("Internationalization", () => {
-    let turkishLanguage, englishLanguage;
+    let turkishLanguage, englishLanguage, password, passwordRepeat;
     const setup = () => {
       const app = {
         components: {
@@ -287,6 +287,8 @@ describe("Sign Up Page", () => {
       });
       turkishLanguage = screen.queryByTitle("Türkçe");
       englishLanguage = screen.queryByTitle("English");
+      password = screen.queryByLabelText(en.password);
+      passwordRepeat = screen.queryByLabelText(en.passwordRepeat);
     };
 
     afterEach(() => {
@@ -339,6 +341,14 @@ describe("Sign Up Page", () => {
       expect(screen.queryByLabelText(en.email)).toBeInTheDocument();
       expect(screen.queryByLabelText(en.password)).toBeInTheDocument();
       expect(screen.queryByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
+    it("displays password mismatch validation in Turkish", async () => {
+      setup();
+      await userEvent.click(turkishLanguage);
+      await userEvent.type(password, "P4ssword");
+      await userEvent.type(passwordRepeat, "N3wP4ss");
+      const validation = screen.queryByText(tr.passwordMismatchValidation);
+      expect(validation).toBeInTheDocument();
     });
   });
 });
