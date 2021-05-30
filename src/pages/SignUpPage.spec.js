@@ -7,6 +7,7 @@ import { rest } from "msw";
 import i18n from "../locales/i18n";
 import en from "../locales/en.json";
 import tr from "../locales/tr.json";
+import LanguageSelector from "../components/LanguageSelector.vue";
 
 describe("Sign Up Page", () => {
   describe("Layout", () => {
@@ -266,13 +267,31 @@ describe("Sign Up Page", () => {
     );
   });
   describe("Internationalization", () => {
+    let turkishLanguage, englishLanguage;
     const setup = () => {
-      render(SignUpPage, {
+      const app = {
+        components: {
+          SignUpPage,
+          LanguageSelector,
+        },
+        template: `
+        <SignUpPage />
+        <LanguageSelector />
+        `,
+      };
+
+      render(app, {
         global: {
           plugins: [i18n],
         },
       });
+      turkishLanguage = screen.queryByTitle("Türkçe");
+      englishLanguage = screen.queryByTitle("English");
     };
+
+    afterEach(() => {
+      i18n.global.locale = "en";
+    });
     it("initially displays all text in English", async () => {
       setup();
       expect(
@@ -289,8 +308,7 @@ describe("Sign Up Page", () => {
     it("displays all text in Turkish after selecting that language", async () => {
       setup();
 
-      const turkish = screen.queryByTitle("Türkçe");
-      await userEvent.click(turkish);
+      await userEvent.click(turkishLanguage);
 
       expect(
         screen.queryByRole("heading", { name: tr.signUp })
@@ -303,14 +321,13 @@ describe("Sign Up Page", () => {
       expect(screen.queryByLabelText(tr.password)).toBeInTheDocument();
       expect(screen.queryByLabelText(tr.passwordRepeat)).toBeInTheDocument();
     });
+
     it("displays all text in English after page is translated to Turkish", async () => {
       setup();
 
-      const turkish = screen.queryByTitle("Türkçe");
-      await userEvent.click(turkish);
+      await userEvent.click(turkishLanguage);
 
-      const english = screen.queryByTitle("English");
-      await userEvent.click(english);
+      await userEvent.click(englishLanguage);
 
       expect(
         screen.queryByRole("heading", { name: en.signUp })
