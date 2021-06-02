@@ -1,5 +1,8 @@
 <template>
-  <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+  <div
+    class="col-lg-6 offset-lg-3 col-md-8 offset-md-2"
+    data-testid="signup-page"
+  >
     <form class="card mt-5" data-testid="form-sign-up" v-if="!signUpSuccess">
       <div class="card-header">
         <h1 class="text-center">{{ $t("signUp") }}</h1>
