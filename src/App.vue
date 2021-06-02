@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <a @click.prevent="onClickLink" href="/" title="Home">Hoaxify</a>
+    <a @click.prevent="onClickLink" href="/signup">{{ $t("signUp") }}</a>
+    <a @click.prevent="onClickLink" href="/login">Login</a>
     <HomePage v-if="path === '/'" />
     <SignUpPage v-else-if="path === '/signup'" />
     <LoginPage v-else-if="path === '/login'" />
@@ -23,9 +26,15 @@ export default {
     LoginPage,
     UserPage,
   },
-  computed: {
-    path() {
-      return window.location.pathname;
+  data() {
+    return {
+      path: window.location.pathname,
+    };
+  },
+  methods: {
+    onClickLink(event) {
+      this.path = event.target.attributes.href.value;
+      window.history.pushState({}, "", this.path);
     },
   },
 };
