@@ -3,6 +3,20 @@ import App from "./App.vue";
 import i18n from "./locales/i18n";
 import userEvent from "@testing-library/user-event";
 import router from "./routes/router";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
+
+const server = setupServer(
+  rest.post("/api/1.0/users/token/:token", (req, res, ctx) => {
+    return res(ctx.status(200));
+  })
+);
+
+beforeAll(() => server.listen());
+
+beforeEach(() => server.resetHandlers());
+
+afterAll(() => server.close());
 
 const setup = async (path) => {
   render(App, {
