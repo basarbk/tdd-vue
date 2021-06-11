@@ -4,11 +4,11 @@
       <h3>Users</h3>
     </div>
     <ul class="list-group list-group-flush">
-      <!-- eslint-disable-next-line vue/require-v-for-key -->
       <li
         class="list-group-item list-group-item-action"
         v-for="user in page.content"
         @click="$router.push('/user/' + user.id)"
+        :key="user.id"
       >
         <UserListItem :user="user" />
       </li>
