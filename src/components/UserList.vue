@@ -13,30 +13,33 @@
         <UserListItem :user="user" />
       </li>
     </ul>
-    <div class="card-footer">
+    <div class="card-footer text-center">
       <button
-        class="btn btn-outline-secondary btn-sm"
+        class="btn btn-outline-secondary btn-sm float-start"
         @click="loadData(page.page - 1)"
-        v-if="page.page !== 0"
+        v-show="page.page !== 0 && !pendingApiCall"
       >
         &lt; previous
       </button>
       <button
         class="btn btn-outline-secondary btn-sm float-end"
         @click="loadData(page.page + 1)"
-        v-if="page.totalPages > page.page + 1"
+        v-show="page.totalPages > page.page + 1 && !pendingApiCall"
       >
         next &gt;
       </button>
+      <Spinner size="normal" v-show="pendingApiCall" />
     </div>
   </div>
 </template>
 <script>
 import { loadUsers } from "../api/apiCalls";
 import UserListItem from "./UserListItem";
+import Spinner from "./Spinner";
 export default {
   components: {
     UserListItem,
+    Spinner,
   },
   data() {
     return {
@@ -46,6 +49,7 @@ export default {
         size: 0,
         totalPages: 0,
       },
+      pendingApiCall: true,
     };
   },
 
@@ -54,8 +58,10 @@ export default {
   },
   methods: {
     async loadData(pageIndex) {
+      this.pendingApiCall = true;
       const response = await loadUsers(pageIndex);
       this.page = response.data;
+      this.pendingApiCall = false;
     },
   },
 };
