@@ -5,5 +5,8 @@
   "password": "Şifre",
   "passwordRepeat": "Şifre Tekrarı",
   "passwordMismatchValidation": "Şifreniz eşleşmiyor",
-  "accountActivationNotification": "Hesabınızı aktifleştirmek için e-postanızı kontrol edin"
+  "accountActivationNotification": "Hesabınızı aktifleştirmek için e-postanızı kontrol edin",
+  "users": "Kullanıclar",
+  "nextPage": "sonraki >",
+  "previousPage": "< önceki"
 }

@@ -5,5 +5,8 @@
   "password": "Password",
   "passwordRepeat": "Password Repeat",
   "passwordMismatchValidation": "Password mismatch",
-  "accountActivationNotification": "Please check your e-mail to activate your account"
+  "accountActivationNotification": "Please check your e-mail to activate your account",
+  "users": "Users",
+  "nextPage": "next >",
+  "previousPage": "< previous"
 }
