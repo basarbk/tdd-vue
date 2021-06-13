@@ -59,6 +59,7 @@ export default {
       this.apiProgress = true;
       try {
         await login({ email: this.email, password: this.password });
+        this.$router.push("/");
       } catch (error) {
         this.failMessage = error.response.data.message;
       }
