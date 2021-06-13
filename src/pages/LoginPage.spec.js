@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/vue";
 import LoginPage from "./LoginPage.vue";
+import userEvent from "@testing-library/user-event";
 
 const setup = async () => {
   render(LoginPage);
@@ -37,6 +38,17 @@ describe("Login Page", () => {
       await setup();
       const button = screen.queryByRole("button", { name: "Login" });
       expect(button).toBeDisabled();
+    });
+  });
+  describe("Interactions", () => {
+    it("enables the button when email and password inputs are filled", async () => {
+      await setup();
+      const emailInput = screen.queryByLabelText("E-mail");
+      const passwordInput = screen.queryByLabelText("Password");
+      await userEvent.type(emailInput, "user100@mail.com");
+      await userEvent.type(passwordInput, "P4ssword");
+      const button = screen.queryByRole("button", { name: "Login" });
+      expect(button).toBeEnabled();
     });
   });
 });

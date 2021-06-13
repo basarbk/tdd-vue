@@ -16,7 +16,7 @@
           type="password"
         />
         <div class="text-center">
-          <button class="btn btn-primary" disabled>Login</button>
+          <button class="btn btn-primary" :disabled="isDisabled">Login</button>
         </div>
       </div>
     </form>
@@ -33,6 +33,11 @@ export default {
       email: "",
       password: "",
     };
+  },
+  computed: {
+    isDisabled() {
+      return !(this.email && this.password);
+    },
   },
 };
 </script>
