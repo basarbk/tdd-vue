@@ -8,13 +8,19 @@ import LoginPage from "./LoginPage.vue";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import i18n from "../locales/i18n";
+import en from "../locales/en.json";
+import tr from "../locales/tr.json";
+import LanguageSelector from "../components/LanguageSelector.vue";
 
 let requestBody,
+  acceptLanguageHeader,
   counter = 0;
 const server = setupServer(
   rest.post("/api/1.0/auth", (req, res, ctx) => {
     requestBody = req.body;
     counter += 1;
+    acceptLanguageHeader = req.headers.get("Accept-Language");
     return res(
       ctx.status(401),
       ctx.json({
@@ -35,7 +41,11 @@ afterAll(() => server.close());
 
 let emailInput, passwordInput, button;
 const setup = async () => {
-  render(LoginPage);
+  render(LoginPage, {
+    global: {
+      plugins: [i18n],
+    },
+  });
   emailInput = screen.queryByLabelText("E-mail");
   passwordInput = screen.queryByLabelText("Password");
   button = screen.queryByRole("button", { name: "Login" });
@@ -137,6 +147,66 @@ describe("Login Page", () => {
       const errorMessage = await screen.findByText("Incorrect credentials");
       await userEvent.type(passwordInput, "N3wP4ssword");
       expect(errorMessage).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Internationalization", () => {
+    let turkishLanguage;
+    const setupTranslation = () => {
+      const app = {
+        components: {
+          LoginPage,
+          LanguageSelector,
+        },
+        template: `
+        <LoginPage />
+        <LanguageSelector />
+        `,
+      };
+
+      render(app, {
+        global: {
+          plugins: [i18n],
+        },
+      });
+      turkishLanguage = screen.queryByTitle("Türkçe");
+    };
+
+    it("initially displays all text in English", async () => {
+      setupTranslation();
+      expect(
+        screen.queryByRole("heading", { name: en.login })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: en.login })
+      ).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.email)).toBeInTheDocument();
+      expect(screen.queryByLabelText(en.password)).toBeInTheDocument();
+    });
+    it("displays all text in turkish after changing language", async () => {
+      setupTranslation();
+      await userEvent.click(turkishLanguage);
+      expect(
+        screen.queryByRole("heading", { name: tr.login })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: tr.login })
+      ).toBeInTheDocument();
+      expect(screen.queryByLabelText(tr.email)).toBeInTheDocument();
+      expect(screen.queryByLabelText(tr.password)).toBeInTheDocument();
+    });
+    it("sends accept-language header as tr in login request", async () => {
+      setupTranslation();
+      await userEvent.click(turkishLanguage);
+      const emailInput = screen.queryByLabelText(tr.email);
+      const passwordInput = screen.queryByLabelText(tr.password);
+      await userEvent.type(emailInput, "user100@mail.com");
+      await userEvent.type(passwordInput, "P4ssword");
+      const button = screen.queryByRole("button", { name: tr.login });
+      await userEvent.click(button);
+      const spinner = screen.queryByRole("status");
+      await waitForElementToBeRemoved(spinner);
+      expect(acceptLanguageHeader).toBe("tr");
     });
   });
 });
