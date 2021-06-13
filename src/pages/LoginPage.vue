@@ -15,6 +15,9 @@
           v-model="password"
           type="password"
         />
+        <div class="alert alert-danger text-center" v-if="failMessage">
+          {{ failMessage }}
+        </div>
         <div class="text-center">
           <button
             class="btn btn-primary"
@@ -43,6 +46,7 @@ export default {
       email: "",
       password: "",
       apiProgress: false,
+      failMessage: undefined,
     };
   },
   computed: {
@@ -56,9 +60,17 @@ export default {
       try {
         await login({ email: this.email, password: this.password });
       } catch (error) {
-        //
+        this.failMessage = error.response.data.message;
       }
       this.apiProgress = false;
+    },
+  },
+  watch: {
+    email() {
+      this.failMessage = undefined;
+    },
+    password() {
+      this.failMessage = undefined;
     },
   },
 };
