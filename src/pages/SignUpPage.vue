@@ -3,47 +3,49 @@
     class="col-lg-6 offset-lg-3 col-md-8 offset-md-2"
     data-testid="signup-page"
   >
-    <form class="card mt-5" data-testid="form-sign-up" v-if="!signUpSuccess">
-      <div class="card-header">
-        <h1 class="text-center">{{ $t("signUp") }}</h1>
-      </div>
-      <div class="card-body">
-        <Input
-          id="username"
-          :label="$t('username')"
-          :help="errors.username"
-          v-model="username"
-        />
-        <Input
-          id="e-mail"
-          :label="$t('email')"
-          :help="errors.email"
-          v-model="email"
-        />
-        <Input
-          id="password"
-          :label="$t('password')"
-          :help="errors.password"
-          v-model="password"
-          type="password"
-        />
-        <Input
-          id="password-repeat"
-          :label="$t('passwordRepeat')"
-          type="password"
-          v-model="passwordRepeat"
-          :help="hasPasswordMismatch ? $t('passwordMismatchValidation') : ''"
-        />
-        <div class="text-center">
-          <ButtonWithProgress
-            :apiProgress="apiProgress"
-            :disabled="isDisabled"
-            :onClick="submit"
-          >
-            {{ $t("signUp") }}
-          </ButtonWithProgress>
-        </div>
-      </div>
+    <form class="mt-5" data-testid="form-sign-up" v-if="!signUpSuccess">
+      <Card>
+        <template v-slot:header>
+          <h1>{{ $t("signUp") }}</h1>
+        </template>
+        <template v-slot:body>
+          <Input
+            id="username"
+            :label="$t('username')"
+            :help="errors.username"
+            v-model="username"
+          />
+          <Input
+            id="e-mail"
+            :label="$t('email')"
+            :help="errors.email"
+            v-model="email"
+          />
+          <Input
+            id="password"
+            :label="$t('password')"
+            :help="errors.password"
+            v-model="password"
+            type="password"
+          />
+          <Input
+            id="password-repeat"
+            :label="$t('passwordRepeat')"
+            type="password"
+            v-model="passwordRepeat"
+            :help="hasPasswordMismatch ? $t('passwordMismatchValidation') : ''"
+          />
+          <div class="text-center">
+            <ButtonWithProgress
+              :apiProgress="apiProgress"
+              :disabled="isDisabled"
+              :onClick="submit"
+            >
+              {{ $t("signUp") }}
+            </ButtonWithProgress>
+          </div>
+        </template>
+      </Card>
     </form>
     <div class="alert alert-success mt-3" v-else>
       {{ $t("accountActivationNotification") }}
@@ -54,11 +56,13 @@
 import { signUp } from "../api/apiCalls";
 import Input from "../components/Input";
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import Card from "../components/Card";
 export default {
   name: "SignUpPage",
   components: {
     Input,
     ButtonWithProgress,
+    Card,
   },
   data() {
     return {

@@ -1,19 +1,21 @@
 <template>
-  <div class="card">
-    <div class="card-header text-center">
+  <Card>
+    <template v-slot:header>
       <h3>{{ $t("users") }}</h3>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li
-        class="list-group-item list-group-item-action"
-        v-for="user in page.content"
-        @click="$router.push('/user/' + user.id)"
-        :key="user.id"
-      >
-        <UserListItem :user="user" />
-      </li>
-    </ul>
-    <div class="card-footer text-center">
+    </template>
+    <template v-slot:default>
+      <ul class="list-group list-group-flush">
+        <li
+          class="list-group-item list-group-item-action"
+          v-for="user in page.content"
+          @click="$router.push('/user/' + user.id)"
+          :key="user.id"
+        >
+          <UserListItem :user="user" />
+        </li>
+      </ul>
+    </template>
+    <template v-slot:footer>
       <button
         class="btn btn-outline-secondary btn-sm float-start"
         @click="loadData(page.page - 1)"
@@ -29,17 +31,19 @@
         {{ $t("nextPage") }}
       </button>
       <Spinner size="normal" v-show="pendingApiCall" />
-    </div>
-  </div>
+    </template>
+  </Card>
 </template>
 <script>
 import { loadUsers } from "../api/apiCalls";
 import UserListItem from "./UserListItem";
 import Spinner from "./Spinner";
+import Card from "./Card";
 export default {
   components: {
     UserListItem,
     Spinner,
+    Card,
   },
   data() {
     return {

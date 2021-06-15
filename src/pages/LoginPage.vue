@@ -3,42 +3,47 @@
     class="col-lg-6 offset-lg-3 col-md-8 offset-md-2"
     data-testid="login-page"
   >
-    <form class="card mt-5">
-      <div class="card-header">
-        <h1 class="text-center">{{ $t("login") }}</h1>
-      </div>
-      <div class="card-body">
-        <Input id="e-mail" :label="$t('email')" v-model="email" />
-        <Input
-          id="password"
-          :label="$t('password')"
-          v-model="password"
-          type="password"
-        />
-        <div class="alert alert-danger text-center" v-if="failMessage">
-          {{ failMessage }}
-        </div>
-        <div class="text-center">
-          <ButtonWithProgress
-            :apiProgress="apiProgress"
-            :disabled="isDisabled"
-            :onClick="submit"
-          >
-            {{ $t("login") }}
-          </ButtonWithProgress>
-        </div>
-      </div>
+    <form class="mt-5">
+      <Card>
+        <template v-slot:header>
+          <h1>{{ $t("login") }}</h1>
+        </template>
+        <template v-slot:body>
+          <Input id="e-mail" :label="$t('email')" v-model="email" />
+          <Input
+            id="password"
+            :label="$t('password')"
+            v-model="password"
+            type="password"
+          />
+          <div class="alert alert-danger text-center" v-if="failMessage">
+            {{ failMessage }}
+          </div>
+          <div class="text-center">
+            <ButtonWithProgress
+              :apiProgress="apiProgress"
+              :disabled="isDisabled"
+              :onClick="submit"
+            >
+              {{ $t("login") }}
+            </ButtonWithProgress>
+          </div>
+        </template>
+      </Card>
     </form>
   </div>
 </template>
 <script>
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import Card from "../components/Card";
 import Input from "../components/Input";
 import { login } from "../api/apiCalls";
 export default {
+  name: "LoginPage",
   components: {
     Input,
     ButtonWithProgress,
+    Card,
   },
   data() {
     return {
