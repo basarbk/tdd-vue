@@ -19,27 +19,26 @@
           {{ failMessage }}
         </div>
         <div class="text-center">
-          <button
-            class="btn btn-primary"
-            :disabled="isDisabled || apiProgress"
-            @click.prevent="submit"
+          <ButtonWithProgress
+            :apiProgress="apiProgress"
+            :disabled="isDisabled"
+            :onClick="submit"
           >
-            <Spinner v-if="apiProgress" />
             {{ $t("login") }}
-          </button>
+          </ButtonWithProgress>
         </div>
       </div>
     </form>
   </div>
 </template>
 <script>
+import ButtonWithProgress from "../components/ButtonWithProgress";
 import Input from "../components/Input";
-import Spinner from "../components/Spinner";
 import { login } from "../api/apiCalls";
 export default {
   components: {
     Input,
-    Spinner,
+    ButtonWithProgress,
   },
   data() {
     return {
