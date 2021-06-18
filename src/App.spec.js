@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import router from "./routes/router";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import store from "./state/store";
 
 const server = setupServer(
   rest.post("/api/1.0/users/token/:token", (req, res, ctx) => {
@@ -39,6 +40,9 @@ const server = setupServer(
         image: null,
       })
     );
+  }),
+  rest.post("/api/1.0/auth", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ id: 5, username: "user5" }));
   })
 );
 
@@ -50,7 +54,7 @@ afterAll(() => server.close());
 
 const setup = async (path) => {
   render(App, {
-    global: { plugins: [i18n, router] },
+    global: { plugins: [i18n, router, store] },
   });
   router.replace(path);
   await router.isReady();
@@ -146,17 +150,38 @@ describe("Routing", () => {
   });
 });
 describe("Login", () => {
-  it("redirects to homepage after successful login", async () => {
-    server.use(
-      rest.post("/api/1.0/auth", (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({ username: "user5" }));
-      })
-    );
+  const setupLoggedIn = async () => {
     await setup("/login");
     await userEvent.type(screen.queryByLabelText("E-mail"), "user5@mail.com");
     await userEvent.type(screen.queryByLabelText("Password"), "P4ssword");
     await userEvent.click(screen.queryByRole("button", { name: "Login" }));
+  };
+  it("redirects to homepage after successful login", async () => {
+    await setupLoggedIn();
     const page = await screen.findByTestId("home-page");
     expect(page).toBeInTheDocument();
+  });
+  it("hides Login and Sign Up links from nav bar after successful login", async () => {
+    await setupLoggedIn();
+    await screen.findByTestId("home-page");
+    const loginLink = screen.queryByRole("link", { name: "Login" });
+    const signUpLink = screen.queryByRole("link", { name: "Sign Up" });
+    expect(loginLink).not.toBeInTheDocument();
+    expect(signUpLink).not.toBeInTheDocument();
+  });
+  it("displays My Profile link on nav bar after successful login", async () => {
+    await setupLoggedIn();
+    await screen.findByTestId("home-page");
+    const myProfileLink = screen.queryByRole("link", { name: "My Profile" });
+    expect(myProfileLink).toBeInTheDocument();
+  });
+  it("displays User Page for the logged in user after clicking My Profile link", async () => {
+    await setupLoggedIn();
+    await screen.findByTestId("home-page");
+    const myProfileLink = screen.queryByRole("link", { name: "My Profile" });
+    await userEvent.click(myProfileLink);
+    await screen.findByTestId("user-page");
+    const header = await screen.findByRole("heading", { name: "user5" });
+    expect(header).toBeInTheDocument();
   });
 });

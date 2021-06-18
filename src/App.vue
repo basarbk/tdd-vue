@@ -8,10 +8,24 @@
           Hoaxify</router-link
         >
         <ul class="navbar-nav ml-auto">
-          <router-link class="nav-link" to="/signup">{{
-            $t("signUp")
-          }}</router-link>
-          <router-link class="nav-link" to="/login">Login</router-link>
+          <router-link
+            class="nav-link"
+            to="/signup"
+            v-if="!$store.state.isLoggedIn"
+            >{{ $t("signUp") }}</router-link
+          >
+          <router-link
+            class="nav-link"
+            to="/login"
+            v-if="!$store.state.isLoggedIn"
+            >Login</router-link
+          >
+          <router-link
+            class="nav-link"
+            :to="'/user/' + $store.state.id"
+            v-if="$store.state.isLoggedIn"
+            >My Profile</router-link
+          >
         </ul>
       </div>
     </nav>
