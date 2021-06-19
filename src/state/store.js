@@ -6,9 +6,11 @@ const store = createStore({
     return storage.getItem("auth");
   },
   mutations: {
-    loginSuccess(state, id) {
+    loginSuccess(state, data) {
       state.isLoggedIn = true;
-      state.id = id;
+      for (let key in data) {
+        state[key] = data[key];
+      }
     },
     reset(state, initialState) {
       state.isLoggedIn = false;
