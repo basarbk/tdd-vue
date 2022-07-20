@@ -11,8 +11,8 @@
 </template>
 <script>
 import { getUserById } from "../api/apiCalls";
-import ProfileCard from "../components/ProfileCard";
-import Spinner from "../components/Spinner";
+import ProfileCard from "../components/ProfileCard.vue";
+import Spinner from "../components/Spinner.vue";
 export default {
   name: "UserPage",
   components: { ProfileCard, Spinner },

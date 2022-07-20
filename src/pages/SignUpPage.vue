@@ -54,9 +54,9 @@
 </template>
 <script>
 import { signUp } from "../api/apiCalls";
-import Input from "../components/Input";
-import ButtonWithProgress from "../components/ButtonWithProgress";
-import Card from "../components/Card";
+import Input from "../components/Input.vue";
+import ButtonWithProgress from "../components/ButtonWithProgress.vue";
+import Card from "../components/Card.vue";
 export default {
   name: "SignUpPage",
   components: {

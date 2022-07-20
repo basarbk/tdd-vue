@@ -34,9 +34,9 @@
   </div>
 </template>
 <script>
-import ButtonWithProgress from "../components/ButtonWithProgress";
-import Card from "../components/Card";
-import Input from "../components/Input";
+import ButtonWithProgress from "../components/ButtonWithProgress.vue";
+import Card from "../components/Card.vue";
+import Input from "../components/Input.vue";
 import { login } from "../api/apiCalls";
 export default {
   name: "LoginPage",

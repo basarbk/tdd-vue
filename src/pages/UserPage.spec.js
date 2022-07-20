@@ -13,10 +13,15 @@ const server = setupServer(
           username: "user1",
           email: "user1@mail.com",
           image: null,
-        })
+        }),
+        ctx.delay(50)
       );
     } else {
-      return res(ctx.status(404), ctx.json({ message: "User not found" }));
+      return res(
+        ctx.status(404),
+        ctx.json({ message: "User not found" }),
+        ctx.delay(50)
+      );
     }
   })
 );

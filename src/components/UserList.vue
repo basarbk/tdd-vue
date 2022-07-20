@@ -36,9 +36,9 @@
 </template>
 <script>
 import { loadUsers } from "../api/apiCalls";
-import UserListItem from "./UserListItem";
-import Spinner from "./Spinner";
-import Card from "./Card";
+import UserListItem from "./UserListItem.vue";
+import Spinner from "./Spinner.vue";
+import Card from "./Card.vue";
 export default {
   components: {
     UserListItem,

@@ -10,7 +10,7 @@ import storage from "./state/storage";
 
 const server = setupServer(
   rest.post("/api/1.0/users/token/:token", (req, res, ctx) => {
-    return res(ctx.status(200));
+    return res(ctx.status(200), ctx.delay(50));
   }),
   rest.get("/api/1.0/users", (req, res, ctx) => {
     return res(
@@ -27,7 +27,8 @@ const server = setupServer(
         page: 0,
         size: 0,
         totalPages: 0,
-      })
+      }),
+      ctx.delay(50)
     );
   }),
   rest.get("/api/1.0/users/:id", (req, res, ctx) => {
@@ -39,11 +40,16 @@ const server = setupServer(
         username: `user${id}`,
         email: `user${id}@mail.com`,
         image: null,
-      })
+      }),
+      ctx.delay(50)
     );
   }),
   rest.post("/api/1.0/auth", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ id: 5, username: "user5" }));
+    return res(
+      ctx.status(200),
+      ctx.json({ id: 5, username: "user5" }),
+      ctx.delay(50)
+    );
   })
 );
 
@@ -62,71 +68,63 @@ const setup = async (path) => {
 };
 
 describe("Routing", () => {
-  it.each`
-    path                | pageTestId
-    ${"/"}              | ${"home-page"}
-    ${"/signup"}        | ${"signup-page"}
-    ${"/login"}         | ${"login-page"}
-    ${"/user/1"}        | ${"user-page"}
-    ${"/user/2"}        | ${"user-page"}
-    ${"/activate/1234"} | ${"activation-page"}
-    ${"/activate/5678"} | ${"activation-page"}
-  `("displays $pageTestId when path is $path", async ({ path, pageTestId }) => {
+  it.each([
+    ["/", "home-page"],
+    ["/signup", "signup-page"],
+    ["/login", "login-page"],
+    ["/user/1", "user-page"],
+    ["/user/2", "user-page"],
+    ["/activate/1234", "activation-page"],
+    ["/activate/5678", "activation-page"],
+  ])("when path is %s it displays %s", async (path, pageTestId) => {
     await setup(path);
     const page = screen.queryByTestId(pageTestId);
     expect(page).toBeInTheDocument();
   });
 
-  it.each`
-    path               | pageTestId
-    ${"/"}             | ${"signup-page"}
-    ${"/"}             | ${"login-page"}
-    ${"/"}             | ${"user-page"}
-    ${"/"}             | ${"activation-page"}
-    ${"/signup"}       | ${"home-page"}
-    ${"/signup"}       | ${"login-page"}
-    ${"/signup"}       | ${"user-page"}
-    ${"/signup"}       | ${"activation-page"}
-    ${"/login"}        | ${"home-page"}
-    ${"/login"}        | ${"signup-page"}
-    ${"/login"}        | ${"user-page"}
-    ${"/login"}        | ${"activation-page"}
-    ${"/user/1"}       | ${"home-page"}
-    ${"/user/1"}       | ${"signup-page"}
-    ${"/user/1"}       | ${"login-page"}
-    ${"/user/1"}       | ${"activation-page"}
-    ${"/activate/123"} | ${"signup-page"}
-    ${"/activate/123"} | ${"home-page"}
-    ${"/activate/123"} | ${"login-page"}
-    ${"/activate/123"} | ${"user-page"}
-  `(
-    "does not display $pageTestId when path is $path",
-    async ({ path, pageTestId }) => {
-      await setup(path);
-      const page = screen.queryByTestId(pageTestId);
-      expect(page).not.toBeInTheDocument();
+  it.each([
+    ["/", "signup-page"],
+    ["/", "login-page"],
+    ["/", "user-page"],
+    ["/", "activation-page"],
+    ["/signup", "home-page"],
+    ["/signup", "login-page"],
+    ["/signup", "user-page"],
+    ["/signup", "activation-page"],
+    ["/login", "home-page"],
+    ["/login", "signup-page"],
+    ["/login", "user-page"],
+    ["/login", "activation-page"],
+    ["/user/1", "home-page"],
+    ["/user/1", "signup-page"],
+    ["/user/1", "login-page"],
+    ["/user/1", "activation-page"],
+    ["/activate/123", "home-page"],
+    ["/activate/123", "signup-page"],
+    ["/activate/123", "login-page"],
+    ["/activate/123", "user-page"],
+  ])("when path is %s do not display %s", async (path, pageTestId) => {
+    await setup(path);
+    const page = screen.queryByTestId(pageTestId);
+    expect(page).not.toBeInTheDocument();
+  });
+
+  it.each([["Home"], ["Sign Up"], ["Login"]])(
+    "has link to %s on NavBar",
+    async (queryName) => {
+      await setup("/");
+      const link = screen.queryByRole("link", { name: queryName });
+      expect(link).toBeInTheDocument();
     }
   );
 
-  it.each`
-    targetPage
-    ${"Home"}
-    ${"Sign Up"}
-    ${"Login"}
-  `("has link to $targetPage on NavBar", async ({ targetPage }) => {
-    await setup("/");
-    const link = screen.queryByRole("link", { name: targetPage });
-    expect(link).toBeInTheDocument();
-  });
-
-  it.each`
-    initialPath  | clickingTo   | visiblePage
-    ${"/"}       | ${"Sign Up"} | ${"signup-page"}
-    ${"/signup"} | ${"Home"}    | ${"home-page"}
-    ${"/"}       | ${"Login"}   | ${"login-page"}
-  `(
-    "displays $visiblePage after clicking $clickingTo link",
-    async ({ initialPath, clickingTo, visiblePage }) => {
+  it.each([
+    ["/", "Sign Up", "signup-page"],
+    ["/signup", "Home", "home-page"],
+    ["/", "Login", "login-page"],
+  ])(
+    "when path is %s after clicking %s, %s will be visible",
+    async (initialPath, clickingTo, visiblePage) => {
       await setup(initialPath);
       const link = screen.queryByRole("link", { name: clickingTo });
       await userEvent.click(link);

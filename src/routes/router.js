@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "../pages/HomePage";
-import SignUpPage from "../pages/SignUpPage";
-import LoginPage from "../pages/LoginPage";
-import UserPage from "../pages/UserPage";
-import AccountActivationPage from "../pages/AccountActivationPage";
+import HomePage from "../pages/HomePage.vue";
+import SignUpPage from "../pages/SignUpPage.vue";
+import LoginPage from "../pages/LoginPage.vue";
+import UserPage from "../pages/UserPage.vue";
+import AccountActivationPage from "../pages/AccountActivationPage.vue";
 
 const routes = [
   {

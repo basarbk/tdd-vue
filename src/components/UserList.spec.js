@@ -7,7 +7,7 @@ import router from "../routes/router";
 import en from "../locales/en.json";
 import tr from "../locales/tr.json";
 import i18n from "../locales/i18n";
-import LanguageSelector from "./LanguageSelector";
+import LanguageSelector from "./LanguageSelector.vue";
 
 const server = setupServer(
   rest.get("/api/1.0/users", (req, res, ctx) => {
@@ -20,7 +20,7 @@ const server = setupServer(
       size = 5;
     }
 
-    return res(ctx.status(200), ctx.json(getPage(page, size)));
+    return res(ctx.status(200), ctx.json(getPage(page, size)), ctx.delay(50));
   })
 );
 

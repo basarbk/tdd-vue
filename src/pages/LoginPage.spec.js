@@ -27,7 +27,8 @@ const server = setupServer(
       ctx.status(401),
       ctx.json({
         message: "Incorrect credentials",
-      })
+      }),
+      ctx.delay(50)
     );
   })
 );
@@ -66,7 +67,8 @@ const loginSuccess = rest.post("/api/1.0/auth", (req, res, ctx) => {
       username: "user5",
       image: null,
       token: "abcdefgh",
-    })
+    }),
+    ctx.delay(50)
   );
 });
 

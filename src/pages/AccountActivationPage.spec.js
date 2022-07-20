@@ -34,12 +34,13 @@ describe("Account Activation Page", () => {
         if (req.params.token === "5678") {
           return res(
             ctx.status(400),
-            ctx.json({ message: "Activation failure" })
+            ctx.json({ message: "Activation failure" }),
+            ctx.delay(50)
           );
         }
 
         counter += 1;
-        return res(ctx.status(200));
+        return res(ctx.status(200), ctx.delay(50));
       })
     );
   });

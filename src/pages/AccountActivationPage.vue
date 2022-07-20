@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import Spinner from "../components/Spinner";
+import Spinner from "../components/Spinner.vue";
 import { activate } from "../api/apiCalls";
 export default {
   components: {

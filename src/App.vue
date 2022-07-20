@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import LanguageSelector from "./components/LanguageSelector";
-import NavBar from "./components/NavBar";
+import LanguageSelector from "./components/LanguageSelector.vue";
+import NavBar from "./components/NavBar.vue";
 export default {
   name: "App",
   components: {
